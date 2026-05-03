@@ -1,35 +1,38 @@
 pipeline {
     agent any
 
-    environment {
-        REPO = 'https://github.com/harshu2502IT/Devops.git'
-    }
-
     stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/harshu2502IT/Devops.git'
+            }
+        }
 
         stage('Clone') {
             steps {
-                git branch: 'main', url: "${REPO}"
+                bat 'echo Cloning repository...'
             }
         }
 
         stage('Build') {
             steps {
-                bat '''
-                docker run ^
-                -v %cd%:/srv/jekyll ^
-                -v %cd%/_site:/srv/jekyll/_site ^
-                jekyll/builder:latest ^
-                /bin/bash -c "chmod -R 777 /srv/jekyll && jekyll build"
-                '''
+                bat 'echo Building project...'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'echo Running tests...'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo "Deploy step here"
-                // Example:
-                // sh 'scp -r _site/* user@server:/var/www/html/'
+                bat '''
+                echo Deploying project to XAMPP...
+                if not exist C:\\xampp\\htdocs mkdir C:\\xampp\\htdocs
+                xcopy * C:\\xampp\\htdocs\\ /E /H /C /I /Y
+                '''
             }
         }
     }
