@@ -15,11 +15,11 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh '''
-                docker run \
-                -v $PWD:/srv/jekyll \
-                -v $PWD/_site:/srv/jekyll/_site \
-                jekyll/builder:latest \
+                bat '''
+                docker run ^
+                -v %cd%:/srv/jekyll ^
+                -v %cd%/_site:/srv/jekyll/_site ^
+                jekyll/builder:latest ^
                 /bin/bash -c "chmod -R 777 /srv/jekyll && jekyll build"
                 '''
             }
